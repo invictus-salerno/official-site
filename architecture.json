@@ -1,0 +1,48 @@
+{
+  "summary": "Sito ASD Invictus Salerno: migrazione fedele di una singola pagina statica a Next.js App Router con export statico.",
+  "areas": [
+    {
+      "path": "src/app",
+      "purpose": "App Router: layout italiano e metadati, pagina composta dalle sezioni, stile globale originale, favicon e pagina 404."
+    },
+    {
+      "path": "src/components",
+      "purpose": "Sezioni statiche; componenti client Header, HeroScroll, HeroVideo, LocalVideo, TeamCarousel e TeamMediaCard per menu, animazione hero con avvio del video in primo piano, lettore locale condiviso e carosello responsive."
+    },
+    {
+      "path": "src/lib/site.ts",
+      "purpose": "Contatti e navigazione condivisi; assetPath applica il prefisso di hosting alla build."
+    },
+    {
+      "path": "public/assets",
+      "purpose": "Sei immagini originali integre, reel locale dell’hero e archivio Instagram con media locali e copertine dei video limitati."
+    },
+    {
+      "path": "assets",
+      "purpose": "Manifest originale di provenienza e QR non tracciato preesistente, entrambi preservati."
+    },
+    {
+      "path": "tests",
+      "purpose": "Test Playwright desktop/mobile: sezioni, contatti, link, asset integri, nove larghezze, menu, tastiera, contenuti senza JavaScript e reel simulati."
+    },
+    {
+      "path": "next.config.ts",
+      "purpose": "Export statico in out; basePath configurabile alla build e immagini locali senza un server di ottimizzazione."
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "purpose": "Controlli automatici e artifact statico; nessuna pubblicazione automatica."
+    }
+  ],
+  "contracts": [
+    "Preservare sezioni, ancore, palette e URL Instagram; hero locale dopo un secondo con audio originale quando consentito dal browser.",
+    "Carosello: 115 media dei 43 post pubblicati dal 2020, compresi tutti gli elementi degli album; 13 video locali e 7 copertine collegate ai post limitati per copyright.",
+    "Scrivere Maestro Andrea in grassetto, seguito da Romano; mantenere telefono e WhatsApp; aggiungere email cliccabile."
+  ],
+  "unknowns": [
+    "L’audio automatico dipende dalle policy del browser; i sette video limitati richiedono i file originali per la riproduzione locale."
+  ],
+  "tests": [
+    "Build di produzione, TypeScript, controlli browser desktop/mobile, contatti, navigazione e caricamento differito dei video."
+  ]
+}
