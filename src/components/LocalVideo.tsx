@@ -9,18 +9,16 @@ export function LocalVideo({
   poster,
   className,
   videoClassName,
-  startAfterMs = 0,
-  enabled = true,
   requireAudio = false,
+  keepPlayingOffscreen = false,
 }: {
   src: string;
   label: string;
   poster?: string;
   className: string;
   videoClassName: string;
-  startAfterMs?: number;
-  enabled?: boolean;
   requireAudio?: boolean;
+  keepPlayingOffscreen?: boolean;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isMuted, setIsMuted] = useState(false);
@@ -30,16 +28,14 @@ export function LocalVideo({
     const video = videoRef.current;
     if (!video) return;
     let cancelled = false;
-    let started = false;
     let visible = false;
+    let hasBeenVisible = false;
     let needsGesture = false;
 
     async function play() {
       if (
         cancelled ||
-        !enabled ||
-        !started ||
-        !visible ||
+        !(visible || (keepPlayingOffscreen && hasBeenVisible)) ||
         document.hidden ||
         !video
       )
@@ -54,8 +50,7 @@ export function LocalVideo({
         // Respect autoplay restrictions while preserving the chosen sound policy.
         if (
           !cancelled &&
-          enabled &&
-          visible &&
+          (visible || (keepPlayingOffscreen && hasBeenVisible)) &&
           !document.hidden &&
           error instanceof DOMException &&
           error.name === "NotAllowedError"
@@ -74,16 +69,10 @@ export function LocalVideo({
       }
     }
 
-    const timer = window.setTimeout(
-      () => {
-        started = true;
-        void play();
-      },
-      Math.max(0, startAfterMs - performance.now()),
-    );
     const observer = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
-      if (visible) void play();
+      hasBeenVisible ||= visible;
+      if (visible || (keepPlayingOffscreen && hasBeenVisible)) void play();
       else video.pause();
     });
     observer.observe(video);
@@ -105,7 +94,6 @@ export function LocalVideo({
     }
     return () => {
       cancelled = true;
-      window.clearTimeout(timer);
       observer.disconnect();
       document.removeEventListener("visibilitychange", onVisibility);
       window.removeEventListener("pointerdown", onGesture);
@@ -113,7 +101,7 @@ export function LocalVideo({
       window.removeEventListener("keydown", onGesture);
       video.pause();
     };
-  }, [src, startAfterMs, enabled, requireAudio]);
+  }, [src, requireAudio, keepPlayingOffscreen]);
 
   return (
     <div className={className}>
@@ -125,7 +113,8 @@ export function LocalVideo({
         aria-label={label}
         playsInline
         loop
-        preload="metadata"
+        autoPlay={keepPlayingOffscreen}
+        preload={keepPlayingOffscreen ? "auto" : "metadata"}
         onVolumeChange={(event) =>
           setIsMuted(
             event.currentTarget.muted || event.currentTarget.volume === 0,

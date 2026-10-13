@@ -905,7 +905,7 @@ footer a {
   gap: 24px;
 }
 
-/* Shared heading entrance. Hero composition lives in hero-trailer.css. */
+/* Shared heading entrance. Hero composition lives in hero-poster.css. */
 @keyframes heading-impact-enter {
   from {
     opacity: 0;

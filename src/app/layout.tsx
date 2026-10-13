@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { site } from "@/lib/site";
 import "./globals.css";
-import "./hero-trailer.css";
+import "./hero-poster.css";
 
 export const metadata: Metadata = {
   title: site.title,

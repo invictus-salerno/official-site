@@ -29,7 +29,7 @@ test("applies the requested navigation, hero and ribbon text changes", async ({
   );
 });
 
-test("attempts the hero after one second and handles browsers blocking sound", async ({
+test("attempts the hero immediately and handles browsers blocking sound", async ({
   page,
 }) => {
   await page.addInitScript(() => {
@@ -60,18 +60,17 @@ test("attempts the hero after one second and handles browsers blocking sound", a
     const player = button.parentElement!.getBoundingClientRect();
     return {
       left: control.left - player.left,
-      bottom: player.bottom - control.bottom,
+      top: control.top - player.top,
+      right: player.right - control.right,
       width: control.width,
       height: control.height,
     };
   });
-  expect(placement.left).toBeGreaterThanOrEqual(16);
-  expect(placement.left).toBeLessThanOrEqual(17);
-  expect(placement.bottom).toBe(page.viewportSize()!.width <= 600 ? 140 : 24);
+  expect(placement.right).toBe(page.viewportSize()!.width <= 600 ? 16 : 20);
+  expect(placement.top).toBe(page.viewportSize()!.width <= 600 ? 16 : 20);
   expect(placement.width).toBeGreaterThanOrEqual(44);
   expect(placement.height).toBeGreaterThanOrEqual(44);
   const attempts = await page.evaluate(() => window.heroAttempts);
-  expect(attempts[0].at).toBeGreaterThanOrEqual(1000);
   expect(attempts[0].muted).toBe(false);
   expect(attempts.some((attempt) => attempt.muted)).toBe(false);
   expect(

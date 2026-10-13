@@ -1,10 +1,10 @@
 import { HeroVideo } from "@/components/HeroVideo";
-import { HeroEntrance } from "@/components/HeroEntrance";
+import { HeroPoster } from "@/components/HeroPoster";
 import { AnimatedHeading } from "@/components/AnimatedHeading";
 
 export function Hero() {
   return (
-    <HeroEntrance>
+    <HeroPoster>
       <div className="hero-copy">
         <div className="hero-copy-heading">
           <AnimatedHeading
@@ -29,6 +29,6 @@ export function Hero() {
         </div>
       </div>
       <HeroVideo />
-    </HeroEntrance>
+    </HeroPoster>
   );
 }

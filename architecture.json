@@ -7,7 +7,7 @@
     },
     {
       "path": "src/components",
-      "purpose": "Sezioni statiche con minimappa Google Maps; componenti client AnimatedHeading, Header, HeroEntrance, HeroVideo, LocalVideo, TeamCarousel e TeamMediaCard per titoli d’impatto, ingresso a sipario del video con audio ON e carosello responsive."
+      "purpose": "Sezioni statiche, HeroPoster e HeroVideo compongono il poster cinematografico; componenti client AnimatedHeading, Header, LocalVideo, TeamCarousel e TeamMediaCard gestiscono titoli, video immediato con audio persistente allo scroll e carosello responsive."
     },
     {
       "path": "src/lib/site.ts",
