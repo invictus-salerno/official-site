@@ -6,7 +6,7 @@ L’hero adotta la direzione **Poster cinematografico**: video protagonista e ti
 
 `HeroPoster` rende la composizione staticamente; il leggero assestamento iniziale del video usa solo CSS e non ne ritarda la riproduzione. I titoli continuano a usare `AnimatedHeading`. Con `prefers-reduced-motion` l’animazione decorativa è disattivata. Le regole specifiche sono in `src/app/hero-poster.css`.
 
-Su desktop il video occupa la parte destra con una sfumatura verso il testo. Su mobile il video riempie la scena, con sfumature superiori e inferiori per titolo e collegamenti. Il comando audio di 48 px si trova in alto a destra. Il sottotesto è stato rimosso dalla landing e “Sports Chanbara. Una passione da condividere.” compare nella sezione del corso.
+Su desktop il video occupa la parte destra con una sfumatura verso il testo. Su mobile il video riempie la scena, con una lieve sfumatura superiore per il titolo e nessuna ombra inferiore. Il comando audio di 48 px si trova in alto a destra. Il sottotesto è stato rimosso dalla landing e “Sports Chanbara. Una passione da condividere.” compare nella sezione del corso.
 
 Il video non aspetta un clic quando il browser blocca l’audio: ritenta subito in modalità silenziosa. Il suono viene abilitato alla prima interazione autentica consentita dal browser oppure dall’icona “Attiva audio”. La scelta manuale di disattivare l’audio viene preservata. Lo scroll non garantisce il permesso di riproduzione sonora: [regole di autoplay dei browser](https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Autoplay).
 

@@ -128,12 +128,9 @@
   .hero-poster .hero-visual::after {
     background: linear-gradient(
       180deg,
-      rgb(11 11 11 / 75%),
-      rgb(11 11 11 / 50%) 24%,
-      transparent 30%,
-      rgb(11 11 11 / 35%) 50%,
-      rgb(11 11 11 / 92%) 78%,
-      var(--black)
+      rgb(11 11 11 / 40%),
+      rgb(11 11 11 / 20%) 24%,
+      transparent 40%
     );
   }
   .hero-poster .hero-copy-heading {
