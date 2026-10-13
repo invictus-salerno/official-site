@@ -10,7 +10,7 @@
 - Carosello: inventario completo dei 43 post dal 2020, con 115 media; design del componente fornito, schede responsive, scorrimento continuo a velocità dimezzata, pausa, tastiera, swipe e preferenze di movimento ridotto. Tredici video locali caricati e riprodotti nell’area visibile; sette limitati nell’embed pubblico conservano copertina e link.
 - Footer: icone Instagram e WhatsApp, “Torna su” e firma “ASD Invictus since 2015” centrata in basso.
 - Titolo carosello: “I nostri successi dal 2020”.
-- Verifiche: build, lint, tipi, formattazione, export alla radice/sottocartella e hash dei 115 media; decodifica reale dei 13 MP4 in entrambi i profili. Verificati i 28 scenari, compresa la riesecuzione mirata dei controlli corretti; dettagli in `verification.md`.
+- Verifiche: build, lint, tipi, formattazione, export alla radice/sottocartella e hash dei 115 media; decodifica reale dei 13 MP4 in entrambi i profili. Suite completa **28/28 test superati**, compresi video mobile centrato e animazioni d’ingresso; dettagli in `verification.md`.
 - Consegna: sorgenti, lockfile, README, CI senza deployment e build statica in `out/`.
 - Sezione 03: MP4 locale con lettore condiviso con l’hero, icona audio e nessuna interfaccia o link Instagram.
 - Limiti: sette video del carosello richiedono gli originali per essere riprodotti localmente. Telefoni fisici e hosting remoto non verificati. Nessun deployment eseguito.

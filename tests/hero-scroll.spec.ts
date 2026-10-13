@@ -4,7 +4,16 @@ test("shrinks the headline and brings the playing video forward on native scroll
   page,
 }, testInfo) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.addInitScript(() => {
+    const originalPlay = HTMLMediaElement.prototype.play;
+    HTMLMediaElement.prototype.play = function () {
+      if (this.classList.contains("hero-video") && !this.dataset.firstPlayMuted)
+        this.dataset.firstPlayMuted = String(this.muted);
+      return originalPlay.call(this);
+    };
+  });
   await page.goto("/");
+  await page.evaluate(() => document.fonts.ready);
   const hero = page.locator(".hero-scroll");
   const player = hero.locator(".hero-visual");
   const video = hero.locator("video");
@@ -22,8 +31,44 @@ test("shrinks the headline and brings the playing video forward on native scroll
   expect(
     await video.evaluate((element: HTMLVideoElement) => element.paused),
   ).toBe(true);
+  const viewportAtStart = page.viewportSize()!;
+  await expect(title.locator(".hero-title-line")).toHaveCount(3);
+  await expect(title.locator(".hero-title-reveal").first()).toHaveCSS(
+    "animation-name",
+    "hero-title-enter",
+  );
+  await hero.evaluate(async (element) => {
+    await Promise.all(
+      element
+        .getAnimations({ subtree: true })
+        .map((animation) => animation.finished),
+    );
+  });
+  await expect(title.locator(".hero-title-reveal").last()).toHaveCSS(
+    "opacity",
+    "1",
+  );
   const initialTitle = await title.boundingBox();
   const initialVideo = await player.boundingBox();
+  await expect(video).not.toHaveAttribute("data-first-play-muted");
+  if (viewportAtStart.width <= 600) {
+    expect(
+      Math.abs(
+        initialVideo!.x + initialVideo!.width / 2 - viewportAtStart.width / 2,
+      ),
+    ).toBeLessThan(1);
+    const heading = (await hero.locator(".hero-copy-heading").boundingBox())!;
+    const actions = (await hero.locator(".hero-copy-actions").boundingBox())!;
+    expect(initialVideo!.y).toBeGreaterThanOrEqual(
+      heading.y + heading.height + 15,
+    );
+    expect(initialVideo!.y + initialVideo!.height).toBeLessThanOrEqual(
+      actions.y - 15,
+    );
+    expect(initialVideo!.y + initialVideo!.height).toBeLessThanOrEqual(
+      viewportAtStart.height,
+    );
+  }
   await page.screenshot({ path: testInfo.outputPath("hero-initial.png") });
 
   const scrollToProgress = async (progress: number) => {
@@ -38,6 +83,19 @@ test("shrinks the headline and brings the playing video forward on native scroll
       });
     }, progress);
   };
+  await scrollToProgress(0.2);
+  await expect(hero).toHaveAttribute("data-foreground", "false");
+  expect(
+    await video.evaluate((element: HTMLVideoElement) => element.paused),
+  ).toBe(true);
+  if (viewportAtStart.width <= 600) {
+    await expect
+      .poll(async () => {
+        const box = (await player.boundingBox())!;
+        return Math.abs(box.x + box.width / 2 - viewportAtStart.width / 2);
+      })
+      .toBeLessThan(1);
+  }
   await scrollToProgress(0.7);
   await expect(hero).toHaveAttribute("data-foreground", "true");
   await expect
@@ -48,6 +106,7 @@ test("shrinks the headline and brings the playing video forward on native scroll
       ),
     )
     .toBe(true);
+  await expect(video).toHaveAttribute("data-first-play-muted", "false");
   await expect
     .poll(async () => (await title.boundingBox())!.width)
     .toBeLessThan(initialTitle!.width * 0.8);
@@ -125,6 +184,11 @@ test("respects reduced motion and centers the footer signature below its links",
   await page.goto("/");
   await expect(page.locator(".hero-stage")).toHaveCSS("display", "contents");
   await expect(page.locator(".hero h1")).toHaveCSS("transform", "none");
+  await expect(page.locator(".hero-title-reveal").first()).toHaveCSS(
+    "animation-name",
+    "none",
+  );
+  await expect(page.locator(".hero-video")).toHaveCSS("animation-name", "none");
   await expect(page.locator(".hero")).toHaveAttribute(
     "data-foreground",
     "true",

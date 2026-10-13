@@ -102,6 +102,23 @@ nav a:hover,
 .hero-stage {
   display: contents;
 }
+.hero-copy-heading,
+.hero-copy-actions {
+  display: contents;
+}
+.hero h1 {
+  display: flex;
+  flex-direction: column;
+}
+.hero-title-line,
+.hero-title-reveal {
+  display: block;
+}
+.hero-title-line {
+  overflow: clip;
+  padding-block: 0.1em;
+  margin-block: -0.1em;
+}
 .eyebrow {
   font-size: 13px;
   letter-spacing: 2.4px;
@@ -879,7 +896,58 @@ footer a {
 }
 
 /* Media-expansion hero: one short sticky scene driven by native scrolling. */
+@keyframes hero-title-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 110%, 0) skewY(3deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes hero-detail-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes hero-video-enter {
+  from {
+    opacity: 0;
+    transform: scale(1.035);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
 @media (prefers-reduced-motion: no-preference) {
+  .hero-title-reveal {
+    animation: hero-title-enter 700ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  }
+  .hero-title-line:nth-child(2) .hero-title-reveal {
+    animation-delay: 100ms;
+  }
+  .hero-title-line:nth-child(3) .hero-title-reveal {
+    animation-delay: 200ms;
+  }
+  .hero-copy .intro {
+    animation: hero-detail-enter 600ms ease-out 200ms backwards;
+  }
+  .hero-copy .button {
+    animation: hero-detail-enter 600ms ease-out 300ms backwards;
+  }
+  .hero-copy .hero-foot {
+    animation: hero-detail-enter 600ms ease-out 400ms backwards;
+  }
+  .hero-video {
+    animation: hero-video-enter 850ms ease-out 250ms backwards;
+  }
   .hero-scroll {
     --hero-progress: 0;
     --video-x: 25vw;
@@ -944,38 +1012,63 @@ footer a {
 }
 @media (prefers-reduced-motion: no-preference) and (max-width: 600px) {
   .hero-scroll {
-    --video-scale: 0.38;
-    --video-x: calc(50vw - 24px - var(--hero-card-width) * 0.19);
-    --video-y: calc(50svh - 24px - var(--hero-card-height) * 0.19);
+    --video-scale: 0.4;
+    --video-x: 0px;
+    --video-y: 40px;
+    --hero-card-height: min(
+      calc(100svh - 116px),
+      calc((100vw - 32px) * 1.777778)
+    );
+    --hero-card-width: min(calc(100vw - 32px), calc((100svh - 116px) * 0.5625));
     height: 175svh;
+  }
+  .hero-scroll .hero-stage {
+    height: calc(100svh - 84px);
   }
   .hero-scroll .hero-copy {
     width: 100%;
-    padding: 28px 6% 24px;
+    padding: 20px 6%;
+    align-items: center;
+    text-align: center;
+  }
+  .hero-scroll .hero-copy-heading {
+    display: flow-root;
+    width: 100%;
+  }
+  .hero-scroll .hero-copy-actions {
+    position: absolute;
+    bottom: 20px;
+    left: 6%;
+    right: 6%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
   }
   .hero-scroll h1 {
-    font-size: clamp(48px, 13vw, 68px);
+    font-size: clamp(40px, 11vw, 52px);
     line-height: 0.98;
+    transform-origin: center top;
   }
   .hero-scroll .intro {
-    font-size: 16px;
-    margin: 18px 0;
+    font-size: 15px;
+    margin: 12px 0 0;
   }
   .hero-scroll .button {
-    padding: 14px 18px;
+    min-height: 44px;
+    padding: 10px 16px;
+    gap: 12px;
     font-size: 14px;
   }
   .hero-scroll .hero-foot {
-    max-width: 160px;
+    width: auto;
     margin-top: 0;
-    padding-top: 24px;
+    padding-top: 0;
   }
-}
-@media (prefers-reduced-motion: no-preference) and (max-width: 600px) and (max-height: 650px) {
-  .hero-scroll {
-    --video-scale: 0.32;
-    --video-x: calc(50vw - 24px - var(--hero-card-width) * 0.16);
-    --video-y: calc(50svh - 24px - var(--hero-card-height) * 0.16);
+  .hero-scroll .hero-foot a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
   }
 }
 @media (prefers-reduced-motion: no-preference) and (min-width: 601px) and (max-height: 500px) {

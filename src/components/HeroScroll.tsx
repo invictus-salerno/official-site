@@ -32,7 +32,10 @@ export function HeroScroll({ children }: { children: ReactNode }) {
     const section = sectionRef.current;
     const stage = section?.querySelector<HTMLElement>(".hero-stage");
     const player = section?.querySelector<HTMLElement>(".hero-visual");
-    if (!section || !stage || !player || reducedMotion) return;
+    const heading = section?.querySelector<HTMLElement>(".hero-copy-heading");
+    const actions = section?.querySelector<HTMLElement>(".hero-copy-actions");
+    if (!section || !stage || !player || !heading || !actions || reducedMotion)
+      return;
 
     let frame = 0;
     let previousProgress = -1;
@@ -69,18 +72,24 @@ export function HeroScroll({ children }: { children: ReactNode }) {
     }
 
     function measure() {
-      if (!section || !stage || !player) return;
+      if (!section || !stage || !player || !heading || !actions) return;
       const width = stage.clientWidth;
       const height = stage.clientHeight;
       const mobile = width <= 600;
-      const scale = mobile ? (height < 650 ? 0.32 : 0.38) : 0.74;
+      // On phones, reserve a centered preview between the heading and actions.
+      // Offset measurements ignore the entrance transforms and avoid layout jumps.
+      const previewTop = heading.offsetTop + heading.offsetHeight + 16;
+      const previewSpace = Math.max(100, actions.offsetTop - 16 - previewTop);
+      const scale = mobile
+        ? Math.min(0.6, previewSpace / player.offsetHeight)
+        : 0.74;
       metrics = {
         top: section.getBoundingClientRect().top + window.scrollY,
         distance: Math.max(1, section.clientHeight - height),
-        x: mobile
-          ? width / 2 - 24 - (player.offsetWidth * scale) / 2
-          : width * 0.25,
-        y: mobile ? height / 2 - 24 - (player.offsetHeight * scale) / 2 : 0,
+        x: mobile ? 0 : width * 0.25,
+        y: mobile
+          ? previewTop + (player.offsetHeight * scale) / 2 - height / 2
+          : 0,
         scale,
       };
       previousProgress = -1;
@@ -91,6 +100,8 @@ export function HeroScroll({ children }: { children: ReactNode }) {
     observer.observe(section);
     observer.observe(stage);
     observer.observe(player);
+    observer.observe(heading);
+    observer.observe(actions);
     window.addEventListener("scroll", schedule, { passive: true });
     window.addEventListener("resize", measure, { passive: true });
     measure();
