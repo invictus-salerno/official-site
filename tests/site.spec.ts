@@ -111,7 +111,7 @@ test("plays the training video locally without Instagram UI or requests", async 
     return route.abort();
   });
   await page.goto("/");
-  await expect(page.locator("iframe")).toHaveCount(0);
+  await expect(page.locator("#video iframe")).toHaveCount(0);
   await expect(page.locator("#video .video-card")).toHaveCount(1);
   await expect(page.locator("#video")).not.toContainText(
     "Keep calm and play SpoChan",

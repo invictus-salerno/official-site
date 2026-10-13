@@ -1,15 +1,20 @@
+import { AnimatedHeading } from "@/components/AnimatedHeading";
+
 export function Course() {
   return (
     <section className="course section" id="corso">
       <div>
         <p className="eyebrow dark">01 / IL CORSO</p>
-        <h2>
-          LA TUA PROSSIMA
-          <br />
-          SFIDA HA UN NOME.
-          <br />
-          <em>CHANBARA.</em>
-        </h2>
+        <AnimatedHeading
+          lines={[
+            "LA TUA PROSSIMA",
+            "SFIDA HA UN NOME.",
+            <em key="last">CHANBARA.</em>,
+          ]}
+        />
+        <p className="course-tagline">
+          Sports Chanbara. Una passione da condividere.
+        </p>
       </div>
       <div className="course-text">
         <p className="large">

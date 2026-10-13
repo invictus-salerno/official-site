@@ -1,31 +1,23 @@
 import { HeroVideo } from "@/components/HeroVideo";
-import { HeroScroll } from "@/components/HeroScroll";
+import { HeroEntrance } from "@/components/HeroEntrance";
+import { AnimatedHeading } from "@/components/AnimatedHeading";
 
 export function Hero() {
   return (
-    <HeroScroll>
+    <HeroEntrance>
       <div className="hero-copy">
         <div className="hero-copy-heading">
-          <h1 id="hero-title">
-            <span className="hero-title-line">
-              <span className="hero-title-reveal">LO SPIRITO</span>
-            </span>{" "}
-            <span className="hero-title-line">
-              <span className="hero-title-reveal">
+          <AnimatedHeading
+            as="h1"
+            id="hero-title"
+            lines={[
+              "LO SPIRITO",
+              <>
                 DI CHI <em>NON</em>
-              </span>
-            </span>{" "}
-            <span className="hero-title-line">
-              <span className="hero-title-reveal">
-                <em>SI ARRENDE.</em>
-              </span>
-            </span>
-          </h1>
-          <p className="intro">
-            Sports Chanbara. Una sfida con te stesso.
-            <br />
-            Una passione da condividere.
-          </p>
+              </>,
+              <em key="last">SI ARRENDE.</em>,
+            ]}
+          />
         </div>
         <div className="hero-copy-actions">
           <a className="button gold" href="#contatti">
@@ -37,6 +29,6 @@ export function Hero() {
         </div>
       </div>
       <HeroVideo />
-    </HeroScroll>
+    </HeroEntrance>
   );
 }

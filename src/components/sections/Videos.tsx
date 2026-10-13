@@ -1,4 +1,5 @@
 import { VideoCard } from "@/components/VideoCard";
+import { AnimatedHeading } from "@/components/AnimatedHeading";
 
 export function Videos() {
   return (
@@ -6,11 +7,9 @@ export function Videos() {
       <div className="section-heading">
         <div>
           <p className="eyebrow dark">03 / DENTRO L’ALLENAMENTO</p>
-          <h2>
-            L’ENERGIA.
-            <br />
-            <em>IN MOVIMENTO.</em>
-          </h2>
+          <AnimatedHeading
+            lines={["L’ENERGIA.", <em key="last">IN MOVIMENTO.</em>]}
+          />
         </div>
         <p>
           Uno sguardo al nostro sport,

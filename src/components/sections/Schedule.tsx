@@ -3,13 +3,9 @@ export function Schedule() {
     <section className="schedule section" id="orari">
       <div>
         <p className="eyebrow">04 / ALLENATI CON NOI</p>
-        <h2>
-          FAI SPAZIO
-          <br />
-          ALLA TUA
-          <br />
-          <em>PASSIONE.</em>
-        </h2>
+        <AnimatedHeading
+          lines={["FAI SPAZIO", "ALLA TUA", <em key="last">PASSIONE.</em>]}
+        />
         <p>Sports Chanbara per adulti · Salerno</p>
       </div>
       <div className="timetable">
@@ -35,3 +31,4 @@ export function Schedule() {
     </section>
   );
 }
+import { AnimatedHeading } from "@/components/AnimatedHeading";

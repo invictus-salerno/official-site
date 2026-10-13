@@ -3,11 +3,9 @@ export function Location() {
     <section className="location section" id="dove-siamo">
       <div>
         <p className="eyebrow dark">05 / DOVE SIAMO</p>
-        <h2>
-          IL NOSTRO PUNTO
-          <br />
-          <em>D’INCONTRO.</em>
-        </h2>
+        <AnimatedHeading
+          lines={["IL NOSTRO PUNTO", <em key="last">D’INCONTRO.</em>]}
+        />
       </div>
       <div className="location-details">
         <h3>Polisportiva Linus</h3>
@@ -16,9 +14,17 @@ export function Location() {
           Viale delle Querce, 1<br />
           84134 Salerno (SA)
         </address>
+        <iframe
+          className="location-map"
+          src={site.mapEmbed}
+          title="Mappa della Polisportiva Linus a Salerno"
+          loading="lazy"
+          referrerPolicy="strict-origin-when-cross-origin"
+          allowFullScreen
+        />
         <a
           className="button gold"
-          href="https://www.google.com/maps/search/?api=1&query=Polisportiva%20Linus%2C%20Viale%20delle%20Querce%201%2C%20Salerno"
+          href={site.mapHref}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -28,3 +34,5 @@ export function Location() {
     </section>
   );
 }
+import { AnimatedHeading } from "@/components/AnimatedHeading";
+import { site } from "@/lib/site";

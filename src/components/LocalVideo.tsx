@@ -11,6 +11,7 @@ export function LocalVideo({
   videoClassName,
   startAfterMs = 0,
   enabled = true,
+  requireAudio = false,
 }: {
   src: string;
   label: string;
@@ -19,9 +20,11 @@ export function LocalVideo({
   videoClassName: string;
   startAfterMs?: number;
   enabled?: boolean;
+  requireAudio?: boolean;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isMuted, setIsMuted] = useState(false);
+  const [autoplayBlocked, setAutoplayBlocked] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -29,6 +32,7 @@ export function LocalVideo({
     let cancelled = false;
     let started = false;
     let visible = false;
+    let needsGesture = false;
 
     async function play() {
       if (
@@ -42,9 +46,12 @@ export function LocalVideo({
         return;
       try {
         await video.play();
+        if (!cancelled) {
+          needsGesture = false;
+          setAutoplayBlocked(false);
+        }
       } catch (error) {
-        // Browsers can reject autoplay with sound. Keep the reel playing and
-        // offer an explicit sound control instead of leaving an empty player.
+        // Respect autoplay restrictions while preserving the chosen sound policy.
         if (
           !cancelled &&
           enabled &&
@@ -53,9 +60,16 @@ export function LocalVideo({
           error instanceof DOMException &&
           error.name === "NotAllowedError"
         ) {
-          video.muted = true;
-          setIsMuted(true);
-          await video.play().catch(() => undefined);
+          if (requireAudio) {
+            // Keep the requested audio ON. Retry on a real user interaction;
+            // never pretend the browser granted audible autoplay permission.
+            needsGesture = true;
+            setAutoplayBlocked(true);
+          } else {
+            video.muted = true;
+            setIsMuted(true);
+            await video.play().catch(() => undefined);
+          }
         }
       }
     }
@@ -78,14 +92,28 @@ export function LocalVideo({
       else void play();
     };
     document.addEventListener("visibilitychange", onVisibility);
+    const onGesture = (event: Event) => {
+      if (!event.isTrusted || !needsGesture || video.muted) return;
+      if ((event.target as Element | null)?.closest?.(".video-audio-toggle"))
+        return;
+      void play();
+    };
+    if (requireAudio) {
+      window.addEventListener("pointerdown", onGesture, { passive: true });
+      window.addEventListener("touchend", onGesture, { passive: true });
+      window.addEventListener("keydown", onGesture);
+    }
     return () => {
       cancelled = true;
       window.clearTimeout(timer);
       observer.disconnect();
       document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener("pointerdown", onGesture);
+      window.removeEventListener("touchend", onGesture);
+      window.removeEventListener("keydown", onGesture);
       video.pause();
     };
-  }, [src, startAfterMs, enabled]);
+  }, [src, startAfterMs, enabled, requireAudio]);
 
   return (
     <div className={className}>
@@ -109,16 +137,34 @@ export function LocalVideo({
       <button
         className="video-audio-toggle"
         type="button"
-        aria-label={isMuted ? "Attiva audio" : "Disattiva audio"}
+        aria-label={
+          autoplayBlocked && !isMuted
+            ? "Avvia video con audio"
+            : isMuted
+              ? "Attiva audio"
+              : "Disattiva audio"
+        }
         aria-pressed={!isMuted}
+        data-autoplay-blocked={autoplayBlocked}
         onClick={() => {
           const video = videoRef.current;
           if (!video) return;
+          if (autoplayBlocked && !isMuted) {
+            void video
+              .play()
+              .then(() => setAutoplayBlocked(false))
+              .catch(() => undefined);
+            return;
+          }
           const enableAudio = video.muted || video.volume === 0;
           if (enableAudio && video.volume === 0) video.volume = 1;
           video.muted = !enableAudio;
           setIsMuted(!enableAudio);
-          if (enableAudio) void video.play().catch(() => undefined);
+          if (enableAudio)
+            void video
+              .play()
+              .then(() => setAutoplayBlocked(false))
+              .catch(() => undefined);
         }}
       >
         <svg

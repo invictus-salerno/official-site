@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { assetPath, site } from "@/lib/site";
+import { AnimatedHeading } from "@/components/AnimatedHeading";
 
 export function Contact() {
   return (
@@ -13,11 +14,9 @@ export function Contact() {
       />
       <div>
         <p className="eyebrow">IL PRIMO PASSO È TUO</p>
-        <h2>
-          CI VEDIAMO
-          <br />
-          <em>SUL TATAMI.</em>
-        </h2>
+        <AnimatedHeading
+          lines={["CI VEDIAMO", <em key="last">SUL TATAMI.</em>]}
+        />
         <p>
           Vuoi saperne di più sul corso per adulti?
           <br />

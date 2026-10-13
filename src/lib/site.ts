@@ -7,6 +7,10 @@ export const site = {
   phone: "388 790 3344",
   phoneHref: "tel:+393887903344",
   whatsapp: "https://wa.me/393887903344",
+  mapHref:
+    "https://www.google.com/maps/search/?api=1&query=Polisportiva%20Linus%2C%20Viale%20delle%20Querce%201%2C%20Salerno",
+  mapEmbed:
+    "https://maps.google.com/maps?q=Polisportiva%20Linus%2C%20Viale%20delle%20Querce%201%2C%20Salerno&z=16&output=embed",
 } as const;
 
 export function assetPath(filename: string) {

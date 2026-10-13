@@ -1,7 +1,7 @@
 "use client";
 
 import { useContext } from "react";
-import { HeroPlaybackContext } from "@/components/HeroScroll";
+import { HeroPlaybackContext } from "@/components/HeroEntrance";
 import { LocalVideo } from "@/components/LocalVideo";
 
 export function HeroVideo() {
@@ -15,6 +15,7 @@ export function HeroVideo() {
       videoClassName="hero-video"
       startAfterMs={1000}
       enabled={enabled}
+      requireAudio
     />
   );
 }

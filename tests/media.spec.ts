@@ -50,10 +50,10 @@ test("attempts the hero after one second and handles browsers blocking sound", a
   await page.goto("/");
   const video = page.locator(".hero-video");
   const audioToggle = page.locator(".hero-visual .video-audio-toggle");
-  await expect(audioToggle).toHaveAccessibleName("Attiva audio");
-  await expect(audioToggle).toHaveAttribute("aria-pressed", "false");
+  await expect(audioToggle).toHaveAccessibleName("Avvia video con audio");
+  await expect(audioToggle).toHaveAttribute("aria-pressed", "true");
   await expect(audioToggle).toHaveText("");
-  await expect(audioToggle.locator("svg path")).toHaveCount(2);
+  await expect(audioToggle.locator("svg path")).toHaveCount(3);
   await expect(page.locator(".hero-visual a")).toHaveCount(0);
   const placement = await audioToggle.evaluate((button) => {
     const control = button.getBoundingClientRect();
@@ -67,13 +67,13 @@ test("attempts the hero after one second and handles browsers blocking sound", a
   });
   expect(placement.left).toBeGreaterThanOrEqual(16);
   expect(placement.left).toBeLessThanOrEqual(17);
-  expect(placement.bottom).toBe(16);
+  expect(placement.bottom).toBe(page.viewportSize()!.width <= 600 ? 140 : 24);
   expect(placement.width).toBeGreaterThanOrEqual(44);
   expect(placement.height).toBeGreaterThanOrEqual(44);
   const attempts = await page.evaluate(() => window.heroAttempts);
   expect(attempts[0].at).toBeGreaterThanOrEqual(1000);
   expect(attempts[0].muted).toBe(false);
-  expect(attempts.some((attempt) => attempt.muted)).toBe(true);
+  expect(attempts.some((attempt) => attempt.muted)).toBe(false);
   expect(
     await video.evaluate((element: HTMLVideoElement) => element.volume),
   ).toBe(1);

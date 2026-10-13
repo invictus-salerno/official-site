@@ -1,6 +1,7 @@
 import { TeamCarousel } from "@/components/TeamCarousel";
 import { teamMedia } from "@/lib/instagram";
 import { site } from "@/lib/site";
+import { AnimatedHeading } from "@/components/AnimatedHeading";
 
 export function Team() {
   return (
@@ -8,11 +9,9 @@ export function Team() {
       <div className="section-heading">
         <div>
           <p className="eyebrow">02 / IL TEAM</p>
-          <h2>
-            NON SOLO UNA SQUADRA.
-            <br />
-            <em>INVICTUS.</em>
-          </h2>
+          <AnimatedHeading
+            lines={["NON SOLO UNA SQUADRA.", <em key="last">INVICTUS.</em>]}
+          />
         </div>
         <p>
           In palestra e in gara.

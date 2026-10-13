@@ -7,7 +7,7 @@
     },
     {
       "path": "src/components",
-      "purpose": "Sezioni statiche; componenti client Header, HeroScroll, HeroVideo, LocalVideo, TeamCarousel e TeamMediaCard per menu, animazione hero con avvio del video in primo piano, lettore locale condiviso e carosello responsive."
+      "purpose": "Sezioni statiche con minimappa Google Maps; componenti client AnimatedHeading, Header, HeroEntrance, HeroVideo, LocalVideo, TeamCarousel e TeamMediaCard per titoli d’impatto, ingresso a sipario del video con audio ON e carosello responsive."
     },
     {
       "path": "src/lib/site.ts",
