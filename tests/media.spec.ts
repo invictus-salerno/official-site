@@ -1,6 +1,10 @@
 import { expect, test } from "@playwright/test";
 import archive from "../src/data/instagram-media.json";
 
+test.use({
+  launchOptions: { args: ["--autoplay-policy=user-gesture-required"] },
+});
+
 declare global {
   interface Window {
     heroAttempts: { at: number; muted: boolean }[];
@@ -34,26 +38,45 @@ test("attempts the hero immediately and handles browsers blocking sound", async 
 }) => {
   await page.addInitScript(() => {
     const attempts: { at: number; muted: boolean }[] = [];
+    let soundUnlocked = false;
+    for (const eventName of ["pointerdown", "touchend", "keydown"]) {
+      window.addEventListener(
+        eventName,
+        (event) => {
+          if (event.isTrusted) soundUnlocked = true;
+        },
+        { capture: true },
+      );
+    }
     Object.defineProperty(window, "heroAttempts", { value: attempts });
     const originalPlay = HTMLMediaElement.prototype.play;
     HTMLMediaElement.prototype.play = function () {
       if (!this.classList.contains("hero-video"))
         return originalPlay.call(this);
       attempts.push({ at: performance.now(), muted: this.muted });
-      if (!this.muted && attempts.length === 1)
+      if (!this.muted && !soundUnlocked)
         return Promise.reject(
           new DOMException("Autoplay requires a gesture", "NotAllowedError"),
         );
-      return Promise.resolve();
+      return originalPlay.call(this);
     };
   });
   await page.goto("/");
   const video = page.locator(".hero-video");
   const audioToggle = page.locator(".hero-visual .video-audio-toggle");
-  await expect(audioToggle).toHaveAccessibleName("Avvia video con audio");
-  await expect(audioToggle).toHaveAttribute("aria-pressed", "true");
+  await expect(audioToggle).toHaveAccessibleName("Attiva audio");
+  await expect(audioToggle).toHaveAttribute("aria-pressed", "false");
   await expect(audioToggle).toHaveText("");
-  await expect(audioToggle.locator("svg path")).toHaveCount(3);
+  await expect(audioToggle.locator("svg path")).toHaveCount(2);
+  // Actual media must advance without any click, even when audible autoplay is denied.
+  await expect
+    .poll(() =>
+      video.evaluate(
+        (element: HTMLVideoElement) =>
+          !element.paused && element.muted && element.currentTime > 0,
+      ),
+    )
+    .toBe(true);
   await expect(page.locator(".hero-visual a")).toHaveCount(0);
   const placement = await audioToggle.evaluate((button) => {
     const control = button.getBoundingClientRect();
@@ -72,11 +95,12 @@ test("attempts the hero immediately and handles browsers blocking sound", async 
   expect(placement.height).toBeGreaterThanOrEqual(44);
   const attempts = await page.evaluate(() => window.heroAttempts);
   expect(attempts[0].muted).toBe(false);
-  expect(attempts.some((attempt) => attempt.muted)).toBe(false);
+  expect(attempts.some((attempt) => attempt.muted)).toBe(true);
   expect(
     await video.evaluate((element: HTMLVideoElement) => element.volume),
   ).toBe(1);
-  await audioToggle.click();
+  // A genuine interaction can unlock sound without interrupting the video.
+  await page.locator(".hero h1").click();
   expect(
     await video.evaluate((element: HTMLVideoElement) => element.muted),
   ).toBe(false);

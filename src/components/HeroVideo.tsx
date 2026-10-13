@@ -8,7 +8,7 @@ export function HeroVideo() {
       label="Keep calm and play SpoChan — ASD Invictus Salerno"
       className="hero-visual"
       videoClassName="hero-video"
-      requireAudio
+      preferAudio
       keepPlayingOffscreen
     />
   );

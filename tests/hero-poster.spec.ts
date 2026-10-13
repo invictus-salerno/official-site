@@ -1,5 +1,9 @@
 import { expect, test } from "@playwright/test";
 
+test.use({
+  launchOptions: { args: ["--autoplay-policy=user-gesture-required"] },
+});
+
 test("starts the poster without a timer and keeps sound while scrolling", async ({
   page,
 }, testInfo) => {
@@ -28,7 +32,15 @@ test("starts the poster without a timer and keeps sound while scrolling", async 
   );
   await page.clock.resume();
   const audio = hero.getByRole("button");
-  if ((await audio.getAttribute("data-autoplay-blocked")) === "true")
+  await expect
+    .poll(() =>
+      video.evaluate(
+        (element: HTMLVideoElement) =>
+          !element.paused && element.currentTime > 0,
+      ),
+    )
+    .toBe(true);
+  if (await video.evaluate((element: HTMLVideoElement) => element.muted))
     await audio.click();
   await expect
     .poll(() =>
@@ -94,10 +106,9 @@ test("prioritizes the video across small screens and landscape with reduced moti
     if (viewport.width <= 600) expect(player.width).toBe(viewport.width);
     const audio = (await hero.getByRole("button").boundingBox())!;
     expect(audio.width).toBe(48);
-    expect(
-      audio.y + audio.height <= heading.y ||
-        audio.x >= heading.x + heading.width,
-    ).toBe(true);
+    const stage = (await hero.locator(".hero-stage").boundingBox())!;
+    expect(heading.x).toBeCloseTo(viewport.width * 0.06, 0);
+    expect(heading.y - stage.y).toBeLessThanOrEqual(90);
     await expect(hero.locator(".button")).toBeVisible();
     await expect(hero.locator(".hero-foot a")).toBeVisible();
     await hero.screenshot({

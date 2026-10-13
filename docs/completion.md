@@ -6,7 +6,7 @@
 - Nome richiesto: “Maestro Andrea Romano” interamente in grassetto; telefono e WhatsApp mantenuti.
 - Email: `invictussalerno@libero.it` visibile e cliccabile.
 - Navigazione e testi: rimosso sottotitolo del marchio, CTA nell’header, eyebrow dell’hero e “CORSO PER ADULTI”; ribbon e link del corso aggiornati.
-- Hero: direzione “Poster cinematografico”, titolo ridotto e video protagonista, avvio immediato senza timer o attesa dell’animazione. Video immersivo su mobile, layout statico con movimento ridotto. Audio inizialmente ON e persistente allo scroll, senza passaggio automatico al muto; icona di 48 px e gestione delle regole di autoplay.
+- Hero: direzione “Poster cinematografico”, titolo ridotto in alto a sinistra e video protagonista, avvio immediato senza timer o attesa dell’animazione. Video immersivo su mobile, layout statico con movimento ridotto. Tentativo con audio ON e avvio silenzioso automatico se il browser lo blocca; suono recuperato su interazione autentica, icona di 48 px e scelta manuale rispettata.
 - Sottotesto hero: spostato nella sezione del corso con la frase “Sports Chanbara. Una passione da condividere.”.
 - Carosello: inventario completo dei 43 post dal 2020, con 115 media; design del componente fornito, schede responsive, scorrimento continuo a velocità dimezzata, pausa, tastiera, swipe e preferenze di movimento ridotto. Tredici video locali caricati e riprodotti nell’area visibile; sette limitati nell’embed pubblico conservano copertina e link.
 - Footer: icone Instagram e WhatsApp, “Torna su” e firma “ASD Invictus since 2015” centrata in basso.

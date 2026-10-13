@@ -9,7 +9,7 @@ export function LocalVideo({
   poster,
   className,
   videoClassName,
-  requireAudio = false,
+  preferAudio = false,
   keepPlayingOffscreen = false,
 }: {
   src: string;
@@ -17,10 +17,11 @@ export function LocalVideo({
   poster?: string;
   className: string;
   videoClassName: string;
-  requireAudio?: boolean;
+  preferAudio?: boolean;
   keepPlayingOffscreen?: boolean;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const manuallyMutedRef = useRef(false);
   const [isMuted, setIsMuted] = useState(false);
   const [autoplayBlocked, setAutoplayBlocked] = useState(false);
 
@@ -43,7 +44,7 @@ export function LocalVideo({
       try {
         await video.play();
         if (!cancelled) {
-          needsGesture = false;
+          if (!video.muted || manuallyMutedRef.current) needsGesture = false;
           setAutoplayBlocked(false);
         }
       } catch (error) {
@@ -55,15 +56,15 @@ export function LocalVideo({
           error instanceof DOMException &&
           error.name === "NotAllowedError"
         ) {
-          if (requireAudio) {
-            // Keep the requested audio ON. Retry on a real user interaction;
-            // never pretend the browser granted audible autoplay permission.
-            needsGesture = true;
-            setAutoplayBlocked(true);
-          } else {
-            video.muted = true;
-            setIsMuted(true);
-            await video.play().catch(() => undefined);
+          // Keep the video moving even when audible autoplay is denied.
+          video.muted = true;
+          setIsMuted(true);
+          needsGesture = preferAudio && !manuallyMutedRef.current;
+          try {
+            await video.play();
+            if (!cancelled) setAutoplayBlocked(false);
+          } catch {
+            if (!cancelled) setAutoplayBlocked(true);
           }
         }
       }
@@ -82,12 +83,14 @@ export function LocalVideo({
     };
     document.addEventListener("visibilitychange", onVisibility);
     const onGesture = (event: Event) => {
-      if (!event.isTrusted || !needsGesture || video.muted) return;
+      if (!event.isTrusted || !needsGesture || manuallyMutedRef.current) return;
       if ((event.target as Element | null)?.closest?.(".video-audio-toggle"))
         return;
+      video.muted = false;
+      setIsMuted(false);
       void play();
     };
-    if (requireAudio) {
+    if (preferAudio) {
       window.addEventListener("pointerdown", onGesture, { passive: true });
       window.addEventListener("touchend", onGesture, { passive: true });
       window.addEventListener("keydown", onGesture);
@@ -101,7 +104,7 @@ export function LocalVideo({
       window.removeEventListener("keydown", onGesture);
       video.pause();
     };
-  }, [src, requireAudio, keepPlayingOffscreen]);
+  }, [src, preferAudio, keepPlayingOffscreen]);
 
   return (
     <div className={className}>
@@ -127,8 +130,8 @@ export function LocalVideo({
         className="video-audio-toggle"
         type="button"
         aria-label={
-          autoplayBlocked && !isMuted
-            ? "Avvia video con audio"
+          autoplayBlocked
+            ? "Avvia video"
             : isMuted
               ? "Attiva audio"
               : "Disattiva audio"
@@ -138,7 +141,7 @@ export function LocalVideo({
         onClick={() => {
           const video = videoRef.current;
           if (!video) return;
-          if (autoplayBlocked && !isMuted) {
+          if (autoplayBlocked) {
             void video
               .play()
               .then(() => setAutoplayBlocked(false))
@@ -146,6 +149,7 @@ export function LocalVideo({
             return;
           }
           const enableAudio = video.muted || video.volume === 0;
+          manuallyMutedRef.current = !enableAudio;
           if (enableAudio && video.volume === 0) video.volume = 1;
           video.muted = !enableAudio;
           setIsMuted(!enableAudio);
