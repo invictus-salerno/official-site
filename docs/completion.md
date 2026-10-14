@@ -10,9 +10,9 @@
 - Sottotesto hero: spostato nella sezione del corso con la frase “Sports Chanbara. Una passione da condividere.”.
 - Carosello: inventario completo dei 43 post dal 2020, con 115 media; design del componente fornito, schede responsive, scorrimento continuo a velocità dimezzata, pausa, tastiera, swipe e preferenze di movimento ridotto. Tredici video locali caricati e riprodotti nell’area visibile; sette limitati nell’embed pubblico conservano copertina e link.
 - Footer: icone Instagram e WhatsApp, “Torna su” e firma “ASD Invictus since 2015” centrata in basso.
-- Titolo carosello: “I nostri successi dal 2020”.
+- Titolo carosello: “I nostri successi”.
 - Titoli e posizione: ingresso d’impatto condiviso tra hero e sei sezioni; minimappa interattiva Google Maps sotto l’indirizzo.
 - Verifiche: build, lint, tipi, formattazione, export alla radice/sottocartella e hash dei 115 media; decodifica reale dei 13 MP4 in entrambi i profili. Suite completa **30/30 test superati**, compresi video mobile centrato, audio ON, titoli e minimappa; dettagli in `verification.md`.
 - Consegna: sorgenti, lockfile, README, CI senza deployment e build statica in `out/`.
-- Sezione 03: MP4 locale con lettore condiviso con l’hero, icona audio e nessuna interfaccia o link Instagram.
+- Sezione 03: selezione casuale a ogni apertura tra i 12 MP4 Instagram locali diversi dall’hero, evitando la ripetizione immediata quando lo storage è disponibile; lettore condiviso, icona audio e nessuna interfaccia o link Instagram.
 - Limiti: sette video del carosello richiedono gli originali per essere riprodotti localmente. Telefoni fisici e hosting remoto non verificati. Nessun deployment eseguito.

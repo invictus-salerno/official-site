@@ -118,12 +118,10 @@ test("plays the training video locally without Instagram UI or requests", async 
   );
   await expect(page.locator("#video .source")).toHaveCount(0);
   const card = page.locator("#video .video-card");
+  await expect(page.locator('#video [aria-busy="false"]')).toHaveCount(1);
   await expect(card.locator("a")).toHaveCount(0);
   const video = card.locator("video");
-  await expect(video).toHaveAttribute(
-    "src",
-    "/assets/instagram/DdpO3L9sPDQ-01.mp4",
-  );
+  await expect(video).toHaveAttribute("src", /^\/assets\/instagram\/.+\.mp4$/);
   await expect
     .poll(() => video.evaluate((element: HTMLVideoElement) => element.paused))
     .toBe(true);
@@ -151,6 +149,60 @@ test("plays the training video locally without Instagram UI or requests", async 
     .poll(() => video.evaluate((element: HTMLVideoElement) => element.paused))
     .toBe(true);
   expect(instagramRequests).toEqual([]);
+});
+
+test("changes the training video on each visit and works without storage", async ({
+  page,
+}) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  // A constant random value makes immediate-repeat prevention deterministic.
+  await page.addInitScript(() => {
+    Math.random = () => 0;
+  });
+  await page.goto("/");
+  let previous: string | null = null;
+  for (let visit = 0; visit < 3; visit++) {
+    if (visit) await page.reload();
+    await expect(page.locator('#video [aria-busy="false"]')).toHaveCount(1);
+    const video = page.locator("#video video");
+    const source = (await video.getAttribute("src")) ?? "";
+    expect(source).toMatch(/^\/assets\/instagram\/.+\.mp4$/);
+    expect(source).not.toBe(previous);
+    expect(source).not.toContain("ChxGeEmOtgY");
+    await video.scrollIntoViewIfNeeded();
+    await expect
+      .poll(() =>
+        video.evaluate(
+          (element: HTMLVideoElement) =>
+            !element.paused && element.videoWidth > 0,
+        ),
+      )
+      .toBe(true);
+    await page.locator("footer").scrollIntoViewIfNeeded();
+    await expect(video).toHaveAttribute("src", source);
+    previous = source;
+  }
+  await page.addInitScript(() => {
+    Object.defineProperty(window, "localStorage", {
+      get() {
+        throw new DOMException("Storage disabled", "SecurityError");
+      },
+    });
+  });
+  await page.reload();
+  await expect(page.locator('#video [aria-busy="false"]')).toHaveCount(1);
+  const video = page.locator("#video video");
+  await video.scrollIntoViewIfNeeded();
+  await expect
+    .poll(() =>
+      video.evaluate(
+        (element: HTMLVideoElement) =>
+          !element.paused && element.videoWidth > 0,
+      ),
+    )
+    .toBe(true);
+  expect(errors).toEqual([]);
 });
 
 test("keeps course content and contact links usable without JavaScript", async ({

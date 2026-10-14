@@ -6,7 +6,7 @@ L’hero adotta la direzione **Poster cinematografico**: video protagonista e ti
 
 `HeroPoster` rende la composizione staticamente; il leggero assestamento iniziale del video usa solo CSS e non ne ritarda la riproduzione. I titoli continuano a usare `AnimatedHeading`. Con `prefers-reduced-motion` l’animazione decorativa è disattivata. Le regole specifiche sono in `src/app/hero-poster.css`.
 
-Su desktop il video occupa la parte destra con una sfumatura verso il testo. Su mobile il video riempie la scena, con una lieve sfumatura superiore per il titolo e nessuna ombra inferiore. Il comando audio di 48 px si trova in alto a destra. Il sottotesto è stato rimosso dalla landing e “Sports Chanbara. Una passione da condividere.” compare nella sezione del corso.
+Su desktop il video occupa la parte destra con una sfumatura verso il testo. Su mobile il video riempie la scena, con una lieve sfumatura superiore per il titolo. Il bordo inferiore sfuma nel fondo nero in una fascia corta, senza un taglio netto. Il titolo è più piccolo e vicino al margine superiore per lasciare spazio al logo del video. Il comando audio di 48 px si trova in alto a destra. Il sottotesto è stato rimosso dalla landing e “Sports Chanbara. Una passione da condividere.” compare nella sezione del corso.
 
 La scena mostra la parte superiore del video e ritaglia almeno il 17% inferiore, nascondendo l’indirizzo impresso nel fotogramma finale. “Entra nel mondo Invictus” e “Scopri di più” occupano una fascia separata sotto il video, nel flusso della pagina, anche su desktop.
 
@@ -15,6 +15,8 @@ Il video non aspetta un clic quando il browser blocca l’audio: ritenta subito 
 `AnimatedHeading` applica lo stesso ingresso d’impatto a titolo hero e sei titoli principali delle sezioni: salita rapida, inclinazione e breve assestamento, con 75 ms tra le righe. Si attiva quando il titolo entra nello schermo; l’hero ripete l’ingresso al ritorno in vista. I titoli rimangono leggibili senza JavaScript o con movimento ridotto. La sezione “Dove siamo” include una minimappa Google Maps responsive sotto l’indirizzo, caricata in modo differito, e conserva il collegamento esterno alle indicazioni.
 
 Il carosello include **115 elementi di 43 post dal 1° gennaio 2020**: 95 foto e 20 video, comprese tutte le immagini degli album. Tredici video sono MP4 locali; sette sono limitati per copyright nell’embed pubblico di Instagram e conservano copertina e collegamento al post. Per riprodurre anche questi sette direttamente servono i file originali.
+
+Il titolo del carosello è “I nostri successi”. Nella sezione “L’energia in movimento” un video viene scelto a ogni apertura o ricaricamento tra i 12 MP4 Instagram locali diversi dall’hero. La scelta resta stabile durante la visita; `localStorage` conserva l’ultimo file per evitare ripetizioni consecutive. Con storage disabilitato la selezione casuale funziona comunque. Non vengono richieste credenziali o caricati player Instagram.
 
 Il design riprende il componente fornito: schede quadrate arrotondate, sfumature laterali, effetto hover e scorrimento orizzontale continuo senza interruzioni. La velocità è dimezzata rispetto all’esempio: 40 secondi per otto schede, quindi 575 secondi per tutti i 115 elementi. Le schede misurano 192 px su telefono, 256 px su tablet e 320 px su desktop. Il carosello non mostra pulsanti di pausa o navigazione; supporta frecce della tastiera, swipe, pausa dello scorrimento su hover/focus e preferenze di movimento ridotto. I video locali visibili si riproducono senza audio in loop; caricamento e riproduzione si sospendono quando escono dall’area visibile. Il gruppo duplicato rende continuo il ciclo ed è escluso dalla navigazione con tastiera e dagli screen reader.
 
@@ -79,6 +81,8 @@ La workflow CI verifica lint, tipi, formattazione, build e test browser; rende d
 - `tests/fixtures/original-site.json`: riferimenti originali usati dai test di regressione.
 
 I contatti riportano **Maestro Andrea Romano**, telefono/WhatsApp `388 790 3344` e [invictussalerno@libero.it](mailto:invictussalerno@libero.it).
+
+Gli allenamenti sono lunedì, mercoledì e venerdì dalle **20:00 alle 21:30**. La nota invita a contattare il maestro per confermare la disponibilità e rimanda alla sezione contatti. Le didascalie nell’archivio Instagram restano documenti storici dei post originali.
 
 ## Archivio Instagram
 

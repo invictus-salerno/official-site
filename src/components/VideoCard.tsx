@@ -1,6 +1,6 @@
 import { LocalVideo } from "@/components/LocalVideo";
 
-type VideoCardProps = {
+export type VideoCardProps = {
   src: string;
   title: string;
   poster: string;

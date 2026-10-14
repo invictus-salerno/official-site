@@ -31,6 +31,19 @@ test("applies the requested navigation, hero and ribbon text changes", async ({
   await expect(page.locator('.course a[href="#orari"]')).toContainText(
     "Allenati con noi",
   );
+  await expect(page.locator("#orari .timetable strong")).toHaveText([
+    "20:00 — 21:30",
+    "20:00 — 21:30",
+    "20:00 — 21:30",
+  ]);
+  await expect(page.locator("#orari")).not.toContainText(
+    "Orari indicati sul nostro profilo Instagram.",
+  );
+  await expect(
+    page.getByRole("link", {
+      name: "Contatta il maestro prima di venire per confermare la disponibilità.",
+    }),
+  ).toHaveAttribute("href", "#contatti");
 });
 
 test("attempts the hero immediately and handles browsers blocking sound", async ({
@@ -123,6 +136,9 @@ test("includes all media in a seamless duplicated track and supports keyboard na
     name: "Foto e video del team dal 2020",
   });
   await carousel.scrollIntoViewIfNeeded();
+  await expect(carousel.locator(".carousel-toolbar")).toHaveText(
+    "I nostri successi",
+  );
   const groups = carousel.locator(".carousel-group");
   await expect(groups).toHaveCount(2);
   await expect(groups.first().locator("figure")).toHaveCount(media.length);

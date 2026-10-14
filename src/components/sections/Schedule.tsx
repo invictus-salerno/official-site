@@ -1,3 +1,5 @@
+import { AnimatedHeading } from "@/components/AnimatedHeading";
+
 export function Schedule() {
   return (
     <section className="schedule section" id="orari">
@@ -11,24 +13,23 @@ export function Schedule() {
       <div className="timetable">
         <div>
           <span>Lunedì</span>
-          <strong>20:00 — 22:00</strong>
+          <strong>20:00 — 21:30</strong>
         </div>
         <div>
           <span>Mercoledì</span>
-          <strong>20:00 — 22:00</strong>
+          <strong>20:00 — 21:30</strong>
         </div>
         <div>
           <span>Venerdì</span>
-          <strong>20:00 — 22:00</strong>
+          <strong>20:00 — 21:30</strong>
         </div>
         <p>
-          Orari indicati sul nostro profilo Instagram.
-          <br />
-          Contatta Andrea Romano prima di venire per confermare la
-          disponibilità.
+          <a className="schedule-contact" href="#contatti">
+            Contatta il maestro prima di venire per confermare la disponibilità.
+            <span aria-hidden="true">↗</span>
+          </a>
         </p>
       </div>
     </section>
   );
 }
-import { AnimatedHeading } from "@/components/AnimatedHeading";

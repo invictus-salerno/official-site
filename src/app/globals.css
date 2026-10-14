@@ -541,6 +541,20 @@ h2 {
   color: #aaa99f;
   margin-top: 22px;
 }
+.schedule-contact {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 44px;
+}
+.timetable .schedule-contact span {
+  flex-shrink: 0;
+  color: var(--gold);
+  font-size: 24px;
+}
+.schedule-contact:hover {
+  color: var(--gold);
+}
 .contact {
   display: grid;
   grid-template-columns: 1fr 1fr;

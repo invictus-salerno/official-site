@@ -161,7 +161,7 @@ export function TeamCarousel({ items }: { items: TeamMedia[] }) {
       }}
     >
       <div className="carousel-toolbar">
-        <span>I nostri successi dal 2020</span>
+        <span>I nostri successi</span>
       </div>
       <div
         ref={viewportRef}

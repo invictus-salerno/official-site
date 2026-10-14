@@ -1,5 +1,15 @@
-import { VideoCard } from "@/components/VideoCard";
+import { RandomTrainingVideo } from "@/components/RandomTrainingVideo";
 import { AnimatedHeading } from "@/components/AnimatedHeading";
+import { teamMedia } from "@/lib/instagram";
+
+const trainingVideos = teamMedia.flatMap((item) =>
+  item.kind === "video" &&
+  item.playback === "native" &&
+  item.poster &&
+  !item.src.endsWith("ChxGeEmOtgY-01.mp4")
+    ? [{ src: item.src, poster: item.poster, title: "Il team in azione" }]
+    : [],
+);
 
 export function Videos() {
   return (
@@ -18,11 +28,7 @@ export function Videos() {
         </p>
       </div>
       <div className="video-grid">
-        <VideoCard
-          src="instagram/DdpO3L9sPDQ-01.mp4"
-          poster="instagram/DdpO3L9sPDQ-01-poster.jpg"
-          title="Ci vediamo sul tatami"
-        />
+        <RandomTrainingVideo videos={trainingVideos} />
       </div>
     </section>
   );
