@@ -107,10 +107,34 @@ test("prioritizes the video across small screens and landscape with reduced moti
     const audio = (await hero.getByRole("button").boundingBox())!;
     expect(audio.width).toBe(48);
     const stage = (await hero.locator(".hero-stage").boundingBox())!;
+    expect(actions.y).toBeGreaterThanOrEqual(stage.y + stage.height);
     expect(heading.x).toBeCloseTo(viewport.width * 0.06, 0);
     expect(heading.y - stage.y).toBeLessThanOrEqual(90);
     await expect(hero.locator(".button")).toBeVisible();
     await expect(hero.locator(".hero-foot a")).toBeVisible();
+    const video = hero.locator("video");
+    await expect
+      .poll(() =>
+        video.evaluate((element: HTMLVideoElement) => element.readyState),
+      )
+      .toBeGreaterThanOrEqual(1);
+    await video.evaluate(async (element: HTMLVideoElement) => {
+      element.pause();
+      await new Promise<void>((resolve) => {
+        element.addEventListener("seeked", () => resolve(), { once: true });
+        element.currentTime = element.duration - 1;
+      });
+    });
+    const visibleSource = await video.evaluate((element: HTMLVideoElement) => {
+      const scale = Math.max(
+        element.clientWidth / element.videoWidth,
+        element.clientHeight / element.videoHeight,
+      );
+      return (
+        element.parentElement!.clientHeight / (element.videoHeight * scale)
+      );
+    });
+    expect(visibleSource).toBeLessThanOrEqual(0.831);
     await hero.screenshot({
       path: testInfo.outputPath(`poster-${viewport.width}.png`),
     });

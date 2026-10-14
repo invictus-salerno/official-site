@@ -8,6 +8,8 @@ L’hero adotta la direzione **Poster cinematografico**: video protagonista e ti
 
 Su desktop il video occupa la parte destra con una sfumatura verso il testo. Su mobile il video riempie la scena, con una lieve sfumatura superiore per il titolo e nessuna ombra inferiore. Il comando audio di 48 px si trova in alto a destra. Il sottotesto è stato rimosso dalla landing e “Sports Chanbara. Una passione da condividere.” compare nella sezione del corso.
 
+La scena mostra la parte superiore del video e ritaglia almeno il 17% inferiore, nascondendo l’indirizzo impresso nel fotogramma finale. “Entra nel mondo Invictus” e “Scopri di più” occupano una fascia separata sotto il video, nel flusso della pagina, anche su desktop.
+
 Il video non aspetta un clic quando il browser blocca l’audio: ritenta subito in modalità silenziosa. Il suono viene abilitato alla prima interazione autentica consentita dal browser oppure dall’icona “Attiva audio”. La scelta manuale di disattivare l’audio viene preservata. Lo scroll non garantisce il permesso di riproduzione sonora: [regole di autoplay dei browser](https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Autoplay).
 
 `AnimatedHeading` applica lo stesso ingresso d’impatto a titolo hero e sei titoli principali delle sezioni: salita rapida, inclinazione e breve assestamento, con 75 ms tra le righe. Si attiva quando il titolo entra nello schermo; l’hero ripete l’ingresso al ritorno in vista. I titoli rimangono leggibili senza JavaScript o con movimento ridotto. La sezione “Dove siamo” include una minimappa Google Maps responsive sotto l’indirizzo, caricata in modo differito, e conserva il collegamento esterno alle indicazioni.
